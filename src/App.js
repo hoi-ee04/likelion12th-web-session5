@@ -1,9 +1,9 @@
-import Main from './pages/Main';
+import Header from './components/Header.jsx';
 
 function App() {
   return (
     <>
-      <Main />
+      <Header />
     </>
   );
 }
