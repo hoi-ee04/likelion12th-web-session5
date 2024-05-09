@@ -62,7 +62,7 @@ const LoginTap = styled.div`
 	width: 40px;
 	text-align: center;
     cursor: pointer;
-    margin-left: 30px;
+    margin-left: 20px;
     border: none;
     background: none;
     color: #74747b;
