@@ -1,21 +1,51 @@
+import {useState, useEffect} from 'react';
 import styled from 'styled-components';
 import logo from '../assets/image/icon_logo.png';
+import whiteLogo from '../assets/image/icon_whitelogo.png';
 import Main from '../pages/Main';
 import glasses from '../assets/image/icon_glasses.png';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const Header = () => {
-    return (
-        <HeaderContent>
-            <OnLeft>
-                <LogoImage src={logo} alt="헤더 로고" />
+    const navigate = useNavigate();
+    const location = useLocation();
+    const [headerBackground, setHeaderBackground] = useState(false);
+    const [isScrolled, setIsScrolled] = useState(false);
 
-            </OnLeft>
+    const goToMainPage = () => {
+        navigate('/');
+    };
+
+    useEffect(() => {
+        const handleScroll = () => {
+            const scrolled = window.scrollY > 0;
+            setIsScrolled(scrolled);
+        };
+
+        window.addEventListener('scroll', handleScroll);
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
+
+    useEffect(() => {
+        if (location.pathname.includes('/detail')) {
+            setHeaderBackground(false);
+        } else {
+            setHeaderBackground(true);
+        }
+    }, [location]);
+
+    return (
+        <HeaderContent sticky={headerBackground || isScrolled}>
+            <LogoImage src={headerBackground || isScrolled ? logo : whiteLogo} alt="헤더 로고" onClick={goToMainPage} />
             <OnRight>
-                <SearchBox>
+                <SearchBox sticky={headerBackground || isScrolled}>
                     <img src={glasses} alt="돋보기 이미지"/>
                     <Search
-                        type="text"
                         placeholder='콘텐츠, 인물, 컬렉션, 유저를 검색해보세요.'
+                        sticky={headerBackground || isScrolled}
                     />
                     
                 </SearchBox>
@@ -31,35 +61,43 @@ const HeaderContent = styled.div`
     align-items: center;
     justify-content: space-between;
     height: 60px;
-    border-bottom: 1px solid #ececec;
+    border-bottom: ${props => (props.sticky ? '1px' : '0px')} solid #ececec;
+    background-color: ${props => (props.sticky ? '#ffffff' : 'transparent')};
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 999;
+    transition: background-color 0.3s ease;
 `;
 
 const LogoImage = styled.img `
     margin: 15px 34px;
     width: 150px;
+    cursor: pointer;
 `;
 
 const CreateAccount = styled.div`
     font-size: 12px;
-    height: 30px;
-	width: 78px;
+    font-weight: bold;
+    height: 28px;
+	width: 75px;
 	text-align: center;
     line-height: 30px;;
     cursor: pointer;
     margin-left: 20px;
     border: 1px solid #9b9b9b;
-    background: none;
-    color: #383838;
+    color: #c4c4c4;
     border-radius: 6px;
 `;
 
 const SearchBox = styled.div`
-    width: 285px;
+    width: 300px;
     display: flex;
     align-items: center;
-    background-color: #eeeeee;
-    border: none;
-    border-radius: 5px;
+    background-color: ${props => (props.sticky ? '#eeeeee' : 'rgba(0, 0, 0, 0.1)')};
+    border: 0.1px solid ${props => (props.sticky ? 'transparent' : '#868686')};
+    border-radius: 2px;
+    
     img{
         margin: 8px;
         height: 18px;
@@ -68,24 +106,19 @@ const SearchBox = styled.div`
 
 const Search = styled.input`
     font-size: 12px;
-    background-color: #eeeeee;
-    color: #868686;
+    background-color: transparent;
+    color: ${props => (props.sticky ? '#2c2c2c' : '#ececec')};
     width: 250px;
-    height: 35px;
+    height: 33px;
     border: none;
     border-radius: 5px;
     outline: none;
 `;
 
-const OnLeft = styled.div`
-
-`;
-
 const OnRight = styled.div`
     display: flex;
     align-items: center;
-    justify-content: flex-end;
-    margin-right: 50px;
+    margin-right: 30px;
 `;
 
 export default Header;

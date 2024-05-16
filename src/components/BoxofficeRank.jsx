@@ -1,51 +1,69 @@
 import styled from "styled-components";
 import DATA from '../assets/Data.jsx';
+import { useNavigate } from "react-router-dom";
 
 const BoxofficeRank = () => {
+	const navigate = useNavigate();
 
-    const formatNumber = (num) => {
-		const formattedNum = num / 10000;
-		return formattedNum.toFixed(1) + '만명';
+	const handleMovieClick = (id) => {
+		navigate(`/detail/${id}`);
 	};
-    return (
-        <>
-        <RankTitle>박스오피스 순위</RankTitle>
-        <MovieRank>
-            {DATA.map((movie, index) => (
-                <MovieItem key={index}>
-                    <MovieImage src={movie.img} alt={movie.title} />
-                    <MovieDescription>
-                        <MovieTitle>{movie.title}</MovieTitle>
-						<MovieInfo>{movie.year} · {movie.country}</MovieInfo>
-						<AudienceInfo>예매율 {movie.percent}  ·  누적 관객 {formatNumber(movie.audience)}</AudienceInfo>
-					</MovieDescription>
-				</MovieItem>
-			))}
-		</MovieRank>
-    </>
-    )
+
+	const formatNumber = (num) => {
+	const formattedNum = num / 10000;
+	return formattedNum.toFixed(1) + '만명';
+	};
+
+	return (
+		<>
+			<Content>
+				<p>박스오피스 순위</p>
+				<MovieRank>
+					{DATA.map((movie, index) => (
+						<MovieItem key={index}>
+							<MovieImage src={movie.img} alt={movie.title} onClick={() => handleMovieClick(movie.rank)} />
+							<MovieDescription>
+								<MovieTitle>{movie.title}</MovieTitle>
+								<MovieInfo>{movie.year} · {movie.country}</MovieInfo>
+								<AudienceInfo>예매율 {movie.percent}  ·  누적 관객 {formatNumber(movie.audience)}</AudienceInfo>
+							</MovieDescription>
+						</MovieItem>
+					))}
+				</MovieRank>
+			</Content>
+		</>
+	)
 };
 
+const Content = styled.div`
+	margin: 100px 0 0 30px;
+	p {
+		font-size: 20px;
+		font-weight: bolder;
+	}
+`;
 
 const MovieRank = styled.div`
 	overflow-x: auto;
 	white-space: nowrap;
-	margin: 10px 28px;
-    margin-bottom: 50px;
-	width: 90%;
+	margin-top: 10px;
+	width: 95%;
     justify-content: center;
+	&::-webkit-scrollbar {
+    display: none;
+	}
 `;
 
 const MovieItem = styled.div`
 	display: inline-block;
-	text-align: start;
 `;
 
 const MovieImage = styled.img`
-	height: 300px;
+	width: 210px;
 	border-radius: 5px;
 	border: 1px solid #ececec;
 	margin: 0 5px;
+	cursor: pointer;
 `;
 
 const MovieDescription = styled.div`
@@ -57,21 +75,20 @@ const MovieDescription = styled.div`
 const MovieTitle = styled.div`
 	font-weight: bold;
 	font-size: 15px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	width: 210px;
+	word-break: break-all;
 `;
 
 const MovieInfo = styled.div`
-	
+	color: #4b4a4a;
 `;
 
 const AudienceInfo = styled.div`
 	font-size: 12px;
 	color: #6b6b6b;
-`;
-
-const RankTitle = styled.div`
-	margin: 30px 0 0 30px;
-	font-size: 20px;
-	font-weight: bolder;
 `;
 
 export default BoxofficeRank;
