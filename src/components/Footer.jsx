@@ -39,7 +39,6 @@ const Footer = () => {
 
 const Menuitem = styled.div`
     display: flex;
-    flex-direction: row;
     align-items: start;
     margin-bottom: 15px;
 `
@@ -49,10 +48,11 @@ const Container = styled.footer`
     padding: 30px ;
     text-align: center;
     line-height: 20px;
+    width: 100%;
+    bottom: 0;
 `;
 
 const Content = styled.div`
-
     font-size: 12px;
     display: flex;
     flex-wrap: wrap;
@@ -61,7 +61,7 @@ const Content = styled.div`
     color: #a5a5a7;
 `;
 
-const Links = styled.div`
+const Links = styled.a`
     display: flex;
     flex-direction: row;
     align-items: start;
@@ -93,8 +93,6 @@ const Address = styled.div`
 const Copyright = styled.div`
     font-size: 12px;
     display: flex;
-    flex-direction: row;
-    align-items: start;
 	line-height: 0px;
     align-items: center;
     color: #848485;

@@ -65,7 +65,7 @@ const LoginTap = styled.div`
     margin-left: 20px;
     border: none;
     background: none;
-    color: #74747b;
+    color: #c4c4c4;
 `;
 
 const ModalLogoImage = styled.img`
