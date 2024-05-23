@@ -134,8 +134,7 @@ const Grayline = styled.div`
 const OrContent = styled.div`
   color: #8c8c8c;
   font-size: 14px;
-  margin: 0 20px;
-  margin-top: 10px;
+  margin: 10px 20px 0;
   cursor: default;
 `;
 
