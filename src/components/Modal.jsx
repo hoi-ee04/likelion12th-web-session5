@@ -1,20 +1,20 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 const Modal = (props) => {
-  const {open, close} = props;
-    return (
-      <>
-        {open && (
-          <ModalBackground>
-            <ModalBlock>
-              <TopContent>
-                <CloseButton onClick={close}>&times;</CloseButton>
-              </TopContent>
-              {props.children}
-            </ModalBlock>
-          </ModalBackground>
-        )}
-      </>
+  const { open, close } = props;
+  return (
+    <>
+      {open && (
+        <ModalBackground>
+          <ModalBlock>
+            <TopContent>
+              <CloseButton onClick={close}>&times;</CloseButton>
+            </TopContent>
+            {props.children}
+          </ModalBlock>
+        </ModalBackground>
+      )}
+    </>
   );
 };
 
