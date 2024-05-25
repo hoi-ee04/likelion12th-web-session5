@@ -2,10 +2,13 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
+import { useSetRecoilState } from "recoil";
+import { recAtom } from "../../atoms/recAtom";
 
 const BoxofficeRank = () => {
   const navigate = useNavigate();
   const [movies, setMovies] = useState([]);
+  const setRecMovies = useSetRecoilState(recAtom);
 
   const handleMovieClick = (id) => {
     navigate(`/detail/${id}`);
@@ -28,6 +31,7 @@ const BoxofficeRank = () => {
         options
       );
       setMovies(data.results);
+      setRecMovies(data.results);
     } catch (error) {
       console.error("Error fetching data: ", error);
     }
@@ -35,6 +39,7 @@ const BoxofficeRank = () => {
 
   useEffect(() => {
     fetchMovies();
+    // eslint-disable-next-line
   }, []);
 
   return (

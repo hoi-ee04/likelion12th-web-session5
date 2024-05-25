@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
+import { useRecoilValue } from "recoil";
+import { recAtom } from "../atoms/recAtom";
 import graph from "../assets/image/review_graph.png";
 import stars from "../assets/image/star_review.png";
 import plus from "../assets/image/icon_plus.png";
@@ -11,10 +13,17 @@ import etc from "../assets/image/icon_etc.png";
 
 const Detail = () => {
   const { pageId } = useParams();
+  const navigate = useNavigate();
   const [movie, setMovie] = useState(null);
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const topRatedMovies = useRecoilValue(recAtom);
+
+  const handleMovieClick = (id) => {
+    navigate(`/detail/${id}`);
+  };
 
   const fetchMovie = async (id) => {
     try {
@@ -56,6 +65,15 @@ const Detail = () => {
     } catch (error) {
       setError(error.message);
     }
+  };
+
+  const handleScroll = (e) => {
+    if (!window.scrollY) return;
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   };
 
   useEffect(() => {
@@ -166,9 +184,81 @@ const Detail = () => {
           ))}
         </VideoList>
       </Video>
+      <RecommendedSection>
+        <p>추천작</p>
+        <RecommendedMovies>
+          {topRatedMovies.map((movie) => (
+            <RecMovieItem key={movie.id} onClick={handleScroll}>
+              <RecMovieImg
+                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                alt={movie.title}
+                onClick={() => handleMovieClick(movie.id)}
+              />
+              <RecMovieInfo>
+                <RecMovieTitle>{movie.title}</RecMovieTitle>
+                <RecMovieStar>평균 ★ {movie.vote_average}</RecMovieStar>
+              </RecMovieInfo>
+            </RecMovieItem>
+          ))}
+        </RecommendedMovies>
+      </RecommendedSection>
     </>
   );
 };
+
+const RecommendedSection = styled.div`
+  margin: 50px 20px;
+  p {
+    font-size: 20px;
+    font-weight: bolder;
+  }
+`;
+
+const RecommendedMovies = styled.div`
+  overflow-x: auto;
+  white-space: nowrap;
+  margin-top: 10px;
+  width: 95%;
+  justify-content: center;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
+const RecMovieItem = styled.div`
+  display: inline-block;
+`;
+
+const RecMovieTitle = styled.div`
+  font-weight: bold;
+  font-size: 15px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 210px;
+  word-break: break-all;
+`;
+
+const RecMovieStar = styled.div`
+  font-size: 12px;
+  color: #6b6b6b;
+`;
+
+const RecMovieImg = styled.img`
+  width: 210px;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 5px;
+  border: 1px solid #ececec;
+  margin: 0 5px;
+  cursor: pointer;
+`;
+
+const RecMovieInfo = styled.div`
+  font-size: 14px;
+  margin-left: 7px;
+  line-height: 25px;
+`;
 
 const Loading = styled.h1`
   display: flex;
