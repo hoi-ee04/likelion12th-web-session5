@@ -1,11 +1,15 @@
 import { useEffect } from "react";
+import styled from "styled-components";
 import axios from "axios";
 import { useSetRecoilState } from "recoil";
 import { recAtom } from "../atoms/recAtom";
 import BoxofficeRank from "../components/Main/BoxofficeRank";
+import { useRecoilValue } from "recoil";
+import { darkModeState } from "../atoms/darkModeAtom";
 
 const Main = () => {
   const setRecMovies = useSetRecoilState(recAtom);
+  const isDarkMode = useRecoilValue(darkModeState);
 
   const fetchTopRatedMovies = async () => {
     try {
@@ -29,7 +33,15 @@ const Main = () => {
     // eslint-disable-next-line
   }, []);
 
-  return <BoxofficeRank />;
+  return (
+    <Background darkmode={isDarkMode ? 1 : 0}>
+      <BoxofficeRank />
+    </Background>
+  );
 };
+
+const Background = styled.div`
+  background-color: ${(props) => (props.darkmode ? "#fff" : "#292929")};
+`;
 
 export default Main;

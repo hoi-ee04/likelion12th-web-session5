@@ -4,6 +4,7 @@ import styled from "styled-components";
 import axios from "axios";
 import { useRecoilValue } from "recoil";
 import { recAtom } from "../atoms/recAtom";
+import { darkModeState } from "../atoms/darkModeAtom";
 import graph from "../assets/image/review_graph.png";
 import stars from "../assets/image/star_review.png";
 import plus from "../assets/image/icon_plus.png";
@@ -18,6 +19,7 @@ const Detail = () => {
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const isDarkMode = useRecoilValue(darkModeState);
 
   const topRatedMovies = useRecoilValue(recAtom);
 
@@ -98,116 +100,135 @@ const Detail = () => {
   }
   return (
     <>
-      <SceneImg
-        bgimage={`https://image.tmdb.org/t/p/w500` + movie.backdrop_path}
-      >
-        <MovieTitle>{movie.title}</MovieTitle>
-        <MovieInfo>{movie.original_title}</MovieInfo>
-        <MovieInfo>
-          {new Date(movie.release_date).getFullYear()} ·{" "}
-          {movie.genres.map((genre) => genre.name).join(", ")}
-        </MovieInfo>
-        <MovieInfo>
-          {Math.floor(movie.runtime / 60) +
-            "시간 " +
-            (movie.runtime % 60) +
-            "분"}{" "}
-        </MovieInfo>
-        <AudienceInfo>
-          예매순위 {movie.popularity}위({movie.percent}) · 누적 관객{" "}
-          {movie.popularity + "명"} · 평점 {(movie.vote_average / 2).toFixed(1)}
-        </AudienceInfo>
-      </SceneImg>
-      <MovieReview>
-        <PosterWrapper>
-          <img
-            src={`https://image.tmdb.org/t/p/w500` + movie.poster_path}
-            alt="영화 포스터"
-          />
-          <p>별점 그래프</p>
-          <GraphContent>
-            <h4>평균 ★{(movie.vote_average / 2).toFixed(1)}</h4>
-            <p>({movie.vote_count}명)</p>
-          </GraphContent>
-          <img src={graph} alt="리뷰 그래프 사진"></img>
-        </PosterWrapper>
-        <ReviewWrapper>
-          <RatingWrapper>
-            <StarRating>
-              <img src={stars} alt="별점" />
-              <p>평가하기</p>
-            </StarRating>
-            <RateAverage>
-              <AverageStar>{(movie.vote_average / 2).toFixed(1)}</AverageStar>
-              <p>평균 별점({movie.vote_count}명)</p>
-            </RateAverage>
-          </RatingWrapper>
-          <Grayline />
-          <Reaction>
-            <ReactionButton>
-              <img src={plus} alt="보고싶어요 버튼" />
-              <p>보고싶어요</p>
-            </ReactionButton>
-            <ReactionButton>
-              <img src={pencil} alt="코멘트 버튼" />
-              <p>코멘트</p>
-            </ReactionButton>
-            <ReactionButton>
-              <img src={eye} alt="보는 중 버튼" />
-              <p>보는 중</p>
-            </ReactionButton>
-            <ReactionButton>
-              <img src={etc} alt="더보기 버튼" />
-              <p>더보기</p>
-            </ReactionButton>
-          </Reaction>
-          <Grayline />
-          <MovieIntro>{movie.overview}</MovieIntro>
-        </ReviewWrapper>
-      </MovieReview>
-      <Video>
-        <h3>동영상</h3>
-        <VideoList>
-          {videos.map((video) => (
-            <a
-              key={video.id}
-              href={`https://www.youtube.com/watch?v=` + video.key}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+      <Background darkmode={isDarkMode ? 1 : 0}>
+        <SceneImg
+          bgimage={`https://image.tmdb.org/t/p/w500` + movie.backdrop_path}
+        >
+          <MovieTitle darkmode={isDarkMode ? 1 : 0}>{movie.title}</MovieTitle>
+          <MovieInfo darkmode={isDarkMode ? 1 : 0}>
+            {movie.original_title}
+          </MovieInfo>
+          <MovieInfo darkmode={isDarkMode ? 1 : 0}>
+            {new Date(movie.release_date).getFullYear()} ·{" "}
+            {movie.genres.map((genre) => genre.name).join(", ")}
+          </MovieInfo>
+          <MovieInfo darkmode={isDarkMode ? 1 : 0}>
+            {Math.floor(movie.runtime / 60) +
+              "시간 " +
+              (movie.runtime % 60) +
+              "분"}{" "}
+          </MovieInfo>
+          <AudienceInfo darkmode={isDarkMode ? 1 : 0}>
+            예매순위 {movie.popularity}위({movie.percent}) · 누적 관객{" "}
+            {movie.popularity + "명"} · 평점{" "}
+            {(movie.vote_average / 2).toFixed(1)}
+          </AudienceInfo>
+        </SceneImg>
+        <MovieReview>
+          <LeftWrapper>
+            <PosterWrapper>
               <img
-                src={`https://img.youtube.com/vi/` + video.key + `/0.jpg`}
-                alt={video.name}
+                src={`https://image.tmdb.org/t/p/w500` + movie.poster_path}
+                alt="영화 포스터"
               />
-              <p>{video.name}</p>
-            </a>
-          ))}
-        </VideoList>
-      </Video>
-      <RecommendedSection>
-        <h3>추천작</h3>
-        <RecommendedMovies>
-          {topRatedMovies.map((movie) => (
-            <RecMovieItem key={movie.id} onClick={handleScroll}>
-              <RecMovieImg
-                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                alt={movie.title}
-                onClick={() => handleMovieClick(movie.id)}
-              />
-              <RecMovieInfo>
-                <RecMovieTitle>{movie.title}</RecMovieTitle>
-                <RecMovieStar>평균 ★ {movie.vote_average}</RecMovieStar>
-              </RecMovieInfo>
-            </RecMovieItem>
-          ))}
-        </RecommendedMovies>
-      </RecommendedSection>
+            </PosterWrapper>
+            <GraphWrapper>
+              <p>별점 그래프</p>
+              <GraphContent darkmode={isDarkMode ? 1 : 0}>
+                <h4>평균 ★{(movie.vote_average / 2).toFixed(1)}</h4>
+                <p>({movie.vote_count}명)</p>
+              </GraphContent>
+              <img src={graph} alt="리뷰 그래프 사진"></img>
+            </GraphWrapper>
+          </LeftWrapper>
+          <ReviewWrapper>
+            <RatingWrapper>
+              <StarRating>
+                <img src={stars} alt="별점" />
+                <p>평가하기</p>
+              </StarRating>
+              <RateAverage>
+                <AverageStar>{(movie.vote_average / 2).toFixed(1)}</AverageStar>
+                <p>평균 별점({movie.vote_count}명)</p>
+              </RateAverage>
+            </RatingWrapper>
+            <Grayline darkmode={isDarkMode ? 1 : 0}></Grayline>
+            <Reaction>
+              <ReactionButton>
+                <img src={plus} alt="보고싶어요 버튼" />
+                <p>보고싶어요</p>
+              </ReactionButton>
+              <ReactionButton>
+                <img src={pencil} alt="코멘트 버튼" />
+                <p>코멘트</p>
+              </ReactionButton>
+              <ReactionButton>
+                <img src={eye} alt="보는 중 버튼" />
+                <p>보는 중</p>
+              </ReactionButton>
+              <ReactionButton>
+                <img src={etc} alt="더보기 버튼" />
+                <p>더보기</p>
+              </ReactionButton>
+            </Reaction>
+            <Grayline darkmode={isDarkMode ? 1 : 0}></Grayline>
+            <MovieIntro>{movie.overview}</MovieIntro>
+          </ReviewWrapper>
+        </MovieReview>
+        <Video darkmode={isDarkMode ? 1 : 0}>
+          <h3>동영상</h3>
+          <VideoList>
+            {videos.map((video) => (
+              <a
+                key={video.id}
+                href={`https://www.youtube.com/watch?v=` + video.key}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img
+                  src={`https://img.youtube.com/vi/` + video.key + `/0.jpg`}
+                  alt={video.name}
+                />
+                <p>{video.name}</p>
+              </a>
+            ))}
+          </VideoList>
+        </Video>
+        <RecommendedSection darkmode={isDarkMode ? 1 : 0}>
+          <h3>추천작</h3>
+          <RecommendedMovies>
+            {topRatedMovies.map((movie) => (
+              <RecMovieItem key={movie.id} onClick={handleScroll}>
+                <RecMovieImg
+                  src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                  alt={movie.title}
+                  onClick={() => handleMovieClick(movie.id)}
+                />
+                <RecMovieInfo>
+                  <RecMovieTitle darkmode={isDarkMode ? 1 : 0}>
+                    {movie.title}
+                  </RecMovieTitle>
+                  <RecMovieStar>평균 ★ {movie.vote_average}</RecMovieStar>
+                </RecMovieInfo>
+              </RecMovieItem>
+            ))}
+          </RecommendedMovies>
+        </RecommendedSection>
+      </Background>
     </>
   );
 };
 
+const Background = styled.div`
+  background-color: ${(props) => (props.darkmode ? "#f8f8f8" : "#292929")};
+`;
+
 const RecommendedSection = styled.div`
-  margin: 50px 20px;
+  height: 500px;
+  margin: 0 20px;
+  h3 {
+    color: ${(props) => (props.darkmode ? "#000000" : "#d3d3d3")};
+  }
   p {
     font-size: 20px;
     font-weight: bolder;
@@ -218,7 +239,7 @@ const RecommendedMovies = styled.div`
   overflow-x: auto;
   white-space: nowrap;
   margin-top: 10px;
-  width: 95%;
+  width: 100%;
   justify-content: center;
   &::-webkit-scrollbar {
     display: none;
@@ -237,6 +258,7 @@ const RecMovieTitle = styled.div`
   text-overflow: ellipsis;
   width: 210px;
   word-break: break-all;
+  color: ${(props) => (props.darkmode ? "#000000" : "#d3d3d3")};
 `;
 
 const RecMovieStar = styled.div`
@@ -249,8 +271,7 @@ const RecMovieImg = styled.img`
   height: 300px;
   object-fit: cover;
   border-radius: 5px;
-  border: 1px solid #ececec;
-  margin: 0 5px;
+  margin: 0 7px;
   cursor: pointer;
 `;
 
@@ -276,6 +297,9 @@ const Error = styled.h1`
 
 const Video = styled.div`
   margin: 20px;
+  h3 {
+    color: ${(props) => (props.darkmode ? "#000000" : "#d3d3d3")};
+  }
 `;
 
 const VideoList = styled.div`
@@ -312,9 +336,18 @@ const ReviewWrapper = styled.div`
 `;
 
 const PosterWrapper = styled.div`
+  img {
+    width: 100%;
+  }
+`;
+
+const LeftWrapper = styled.div`
   margin: 3%;
   flex-direction: column;
   width: 25%;
+`;
+
+const GraphWrapper = styled.div`
   img {
     width: 100%;
   }
@@ -324,6 +357,9 @@ const GraphContent = styled.div`
   height: 20px;
   display: flex;
   align-items: center;
+  h4 {
+    color: #c4c4c4;
+  }
 `;
 
 const Reaction = styled.div`
@@ -342,7 +378,6 @@ const ReactionButton = styled.div`
 `;
 
 const MovieReview = styled.div`
-  background-color: #f8f8f8;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -387,21 +422,21 @@ const SceneImg = styled.div`
 const MovieTitle = styled.div`
   font-weight: bold;
   font-size: 33px;
-  color: white;
+  color: ${(props) => (props.darkmode ? "#e7e7e7" : "#000000")};
   margin-bottom: 15px;
   margin-left: 30px;
 `;
 
 const MovieInfo = styled.div`
-  color: white;
+  color: ${(props) => (props.darkmode ? "#e7e7e7" : "#000000")};
   margin-bottom: 8px;
   font-size: 13px;
   margin-left: 30px;
 `;
 
 const AudienceInfo = styled.div`
+  color: ${(props) => (props.darkmode ? "#e7e7e7" : "#000000")};
   font-size: 13px;
-  color: white;
   margin-top: 8px;
   margin-bottom: 58px;
   margin-left: 30px;
@@ -410,7 +445,7 @@ const AudienceInfo = styled.div`
 const Grayline = styled.div`
   margin: 15px 0;
   height: 1px;
-  background-color: #dadada;
+  background-color: ${(props) => (props.darkmode ? "#dadada" : "#464646")};
 `;
 
 const StarRating = styled.div`

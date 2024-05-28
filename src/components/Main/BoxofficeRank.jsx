@@ -4,11 +4,14 @@ import styled from "styled-components";
 import axios from "axios";
 import { useSetRecoilState } from "recoil";
 import { recAtom } from "../../atoms/recAtom";
+import { useRecoilValue } from "recoil";
+import { darkModeState } from "../../atoms/darkModeAtom";
 
 const BoxofficeRank = () => {
   const navigate = useNavigate();
   const [movies, setMovies] = useState([]);
   const setRecMovies = useSetRecoilState(recAtom);
+  const isDarkMode = useRecoilValue(darkModeState);
 
   const handleMovieClick = (id) => {
     navigate(`/detail/${id}`);
@@ -44,7 +47,7 @@ const BoxofficeRank = () => {
 
   return (
     <>
-      <Content>
+      <Content darkmode={isDarkMode ? 1 : 0}>
         <p>박스오피스 순위</p>
         <MovieRank>
           {movies.map((movie) => (
@@ -55,7 +58,9 @@ const BoxofficeRank = () => {
                 onClick={() => handleMovieClick(movie.id)}
               />
               <MovieDescription>
-                <MovieTitle>{movie.title}</MovieTitle>
+                <MovieTitle darkmode={isDarkMode ? 1 : 0}>
+                  {movie.title}
+                </MovieTitle>
                 <MovieInfo>
                   {new Date(movie.release_date).getFullYear()} ·{" "}
                   {movie.original_language.toUpperCase()}
@@ -74,8 +79,11 @@ const BoxofficeRank = () => {
 };
 
 const Content = styled.div`
-  margin: 100px 0 50px 30px;
+  margin: 0 30px;
+  padding: 70px 0;
+  height: 600px;
   p {
+    color: ${(props) => (props.darkmode ? "#000000" : "#d3d3d3")};
     font-size: 20px;
     font-weight: bolder;
   }
@@ -85,7 +93,7 @@ const MovieRank = styled.div`
   overflow-x: auto;
   white-space: nowrap;
   margin-top: 10px;
-  width: 95%;
+  width: 100%;
   justify-content: center;
   &::-webkit-scrollbar {
     display: none;
@@ -101,8 +109,7 @@ const MovieImage = styled.img`
   height: 300px;
   object-fit: cover;
   border-radius: 5px;
-  border: 1px solid #ececec;
-  margin: 0 5px;
+  margin: 0 7px;
   cursor: pointer;
 `;
 
@@ -120,6 +127,7 @@ const MovieTitle = styled.div`
   text-overflow: ellipsis;
   width: 210px;
   word-break: break-all;
+  color: ${(props) => (props.darkmode ? "#000000" : "#d3d3d3")};
 `;
 
 const MovieInfo = styled.div`
