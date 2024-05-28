@@ -99,7 +99,7 @@ const Detail = () => {
   return (
     <>
       <SceneImg
-        bgImage={`https://image.tmdb.org/t/p/w500` + movie.backdrop_path}
+        bgimage={`https://image.tmdb.org/t/p/w500` + movie.backdrop_path}
       >
         <MovieTitle>{movie.title}</MovieTitle>
         <MovieInfo>{movie.original_title}</MovieInfo>
@@ -125,10 +125,10 @@ const Detail = () => {
             alt="영화 포스터"
           />
           <p>별점 그래프</p>
-          <content>
-            <p1>평균 ★{(movie.vote_average / 2).toFixed(1)}</p1>
+          <GraphContent>
+            <h4>평균 ★{(movie.vote_average / 2).toFixed(1)}</h4>
             <p>({movie.vote_count}명)</p>
-          </content>
+          </GraphContent>
           <img src={graph} alt="리뷰 그래프 사진"></img>
         </PosterWrapper>
         <ReviewWrapper>
@@ -138,7 +138,7 @@ const Detail = () => {
               <p>평가하기</p>
             </StarRating>
             <RateAverage>
-              <rate>{(movie.vote_average / 2).toFixed(1)}</rate>
+              <AverageStar>{(movie.vote_average / 2).toFixed(1)}</AverageStar>
               <p>평균 별점({movie.vote_count}명)</p>
             </RateAverage>
           </RatingWrapper>
@@ -166,7 +166,7 @@ const Detail = () => {
         </ReviewWrapper>
       </MovieReview>
       <Video>
-        <p2>동영상</p2>
+        <h3>동영상</h3>
         <VideoList>
           {videos.map((video) => (
             <a
@@ -185,7 +185,7 @@ const Detail = () => {
         </VideoList>
       </Video>
       <RecommendedSection>
-        <p>추천작</p>
+        <h3>추천작</h3>
         <RecommendedMovies>
           {topRatedMovies.map((movie) => (
             <RecMovieItem key={movie.id} onClick={handleScroll}>
@@ -276,10 +276,6 @@ const Error = styled.h1`
 
 const Video = styled.div`
   margin: 20px;
-  p2 {
-    font-size: 20px;
-    font-weight: bolder;
-  }
 `;
 
 const VideoList = styled.div`
@@ -322,15 +318,12 @@ const PosterWrapper = styled.div`
   img {
     width: 100%;
   }
-  content {
-    height: 20px;
-    display: flex;
-    align-items: center;
-  }
-  p1 {
-    margin-right: 2px;
-    font-weight: bold;
-  }
+`;
+
+const GraphContent = styled.div`
+  height: 20px;
+  display: flex;
+  align-items: center;
 `;
 
 const Reaction = styled.div`
@@ -371,10 +364,11 @@ const RateAverage = styled.div`
   width: 500px;
   flex-direction: column;
   align-items: center;
-  rate {
-    font-size: 40px;
-    color: #adadad;
-  }
+`;
+
+const AverageStar = styled.div`
+  font-size: 40px;
+  color: #adadad;
 `;
 
 const SceneImg = styled.div`
@@ -385,7 +379,7 @@ const SceneImg = styled.div`
   width: 100%;
   height: 550px;
   background-image: radial-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.4)),
-    url(${(props) => props.bgImage});
+    url(${(props) => props.bgimage});
   background-size: cover;
   background-position: center;
 `;
@@ -406,11 +400,10 @@ const MovieInfo = styled.div`
 `;
 
 const AudienceInfo = styled.div`
-  font-size: 12px;
+  font-size: 13px;
   color: white;
   margin-top: 8px;
   margin-bottom: 58px;
-  font-size: 13px;
   margin-left: 30px;
 `;
 

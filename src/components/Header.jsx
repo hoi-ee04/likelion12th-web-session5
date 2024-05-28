@@ -37,19 +37,21 @@ const Header = () => {
     }
   }, [location]);
 
+  const isSticky = headerBackground || isScrolled;
+
   return (
-    <HeaderContent sticky={headerBackground || isScrolled}>
+    <HeaderContent sticky={isSticky ? 1 : 0}>
       <LogoImage
-        src={headerBackground || isScrolled ? logo : whiteLogo}
+        src={isSticky ? logo : whiteLogo}
         alt="헤더 로고"
         onClick={goToMainPage}
       />
       <OnRight>
-        <SearchBox sticky={headerBackground || isScrolled}>
+        <SearchBox sticky={isSticky ? 1 : 0}>
           <img src={glasses} alt="돋보기 이미지" />
           <Search
             placeholder="콘텐츠, 인물, 컬렉션, 유저를 검색해보세요."
-            sticky={headerBackground || isScrolled}
+            sticky={isSticky ? 1 : 0}
           />
         </SearchBox>
         <Login />
