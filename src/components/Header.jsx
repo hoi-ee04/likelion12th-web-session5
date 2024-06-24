@@ -2,15 +2,20 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 import logo from "../assets/image/icon_logo.png";
 import whiteLogo from "../assets/image/icon_whitelogo.png";
+import darkLogo from "../assets/image/icon_darkmodelogo.png";
 import Login from "../pages/Login";
 import glasses from "../assets/image/icon_glasses.png";
 import { useNavigate, useLocation } from "react-router-dom";
+import DarkModeToggle from "./Main/DarkModeToggle";
+import { useRecoilValue } from "recoil";
+import { darkModeState } from "../atoms/darkModeAtom";
 
 const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [headerBackground, setHeaderBackground] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const isDarkMode = useRecoilValue(darkModeState);
 
   const goToMainPage = () => {
     navigate("/");
@@ -37,19 +42,22 @@ const Header = () => {
     }
   }, [location]);
 
+  const isSticky = headerBackground || isScrolled;
+
   return (
-    <HeaderContent sticky={headerBackground || isScrolled}>
+    <HeaderContent sticky={isSticky ? 1 : 0} darkmode={isDarkMode ? 1 : 0}>
       <LogoImage
-        src={headerBackground || isScrolled ? logo : whiteLogo}
+        src={isSticky ? (isDarkMode ? logo : darkLogo) : whiteLogo}
         alt="헤더 로고"
         onClick={goToMainPage}
       />
+      <DarkModeToggle />
       <OnRight>
-        <SearchBox sticky={headerBackground || isScrolled}>
+        <SearchBox sticky={isSticky ? 1 : 0} darkmode={isDarkMode ? 1 : 0}>
           <img src={glasses} alt="돋보기 이미지" />
           <Search
             placeholder="콘텐츠, 인물, 컬렉션, 유저를 검색해보세요."
-            sticky={headerBackground || isScrolled}
+            sticky={isSticky ? 1 : 0}
           />
         </SearchBox>
         <Login />
@@ -64,8 +72,12 @@ const HeaderContent = styled.div`
   align-items: center;
   justify-content: space-between;
   height: 60px;
-  border-bottom: ${(props) => (props.sticky ? "1px" : "0px")} solid #ececec;
-  background-color: ${(props) => (props.sticky ? "#ffffff" : "transparent")};
+  border-bottom: ${(props) => (props.sticky ? "1px" : "0px")} solid
+    ${(props) =>
+      props.sticky ? (props.darkmode ? "#ececec" : "#474747") : "transparent"};
+  background-color: ${(props) =>
+    props.sticky ? (props.darkmode ? "#ffffff" : "#252525") : "transparent"};
+  color: ${(props) => (props.darkmode ? "#fff" : "#000")};
   position: fixed;
   width: 100%;
   top: 0;
@@ -98,7 +110,7 @@ const SearchBox = styled.div`
   display: flex;
   align-items: center;
   background-color: ${(props) =>
-    props.sticky ? "#eeeeee" : "rgba(0, 0, 0, 0.1)"};
+    props.sticky ? (props.darkmode ? "#eeeeee" : "#303030") : "transparent"};
   border: 0.1px solid ${(props) => (props.sticky ? "transparent" : "#868686")};
   border-radius: 2px;
 
